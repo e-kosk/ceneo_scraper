@@ -3,7 +3,7 @@
 ## Etap 1 - analiza struktury opinii w serwisie [ceneo.pl](https://www.ceneo.pl/)
 |Składowa                |Selektor                                        |Nazwa zmiennej|
 |------------------------|------------------------------------------------|--------------|
-|opinia                  |li.js_product-review                            |opinion       |
+|opinia                  |div.js_product-review                            |opinion       |
 |identyfikator opinii    |["data-entry-id"]                               |opinion_id    |
 |autor                   |div.reviewer-name-line                          |author        |
 |rekomendacja            |div.product-review-summary > em                 |recommendation|
@@ -28,5 +28,5 @@
 
 ## Etap 4
 - transformacja i wyczyszczenie danych
-- refaktorin kodu
+- refaktoring kodu
 - parametryzacja 
