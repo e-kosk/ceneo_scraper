@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import CreateView
+
+from scrapper_app.form import AddProductForm
+from scrapper_app.models import ProductModel
 
 
 class HomeView(View):
@@ -23,8 +27,20 @@ class SelectProductView(View):
 class AddProductView(View):
 
     def get(self, request):
+        form = AddProductForm()
         context = {
-            'form': 'not available'
+            'form': form
+        }
+        return render(request, 'add_product.html', context=context)
+
+    def post(self, request):
+        form = AddProductForm(request.POST)
+
+        if form.is_valid():
+            return redirect('home')
+
+        context = {
+            'form': form
         }
         return render(request, 'add_product.html', context=context)
 

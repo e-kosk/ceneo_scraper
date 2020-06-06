@@ -1,9 +1,44 @@
 {% extends 'main.html' %}
+{#{% load crispy_forms_filters %}#}
+{#{% load crispy_forms_tags %}#}
 
 {% block title %}
 Add Product
 {% endblock %}
 
 {% block content %}
-    <h1>Add product</h1>
+    <h1 class="py-3">Dodaj produkt</h1>
+    <hr>
+{#    <p class="py-3">Podaj ID produktu którego szukasz</p>#}
+{#    <form>#}
+{#        <div class="form-group">#}
+{#            <label for="product-id">ID produktu: </label>#}
+{#            <input type="text" class="form-control" id="product-id" aria-describedby="emailHelp" placeholder="ID">#}
+{#            <small id="emailHelp" class="form-text text-muted">ID produktu składa się z 8 cyfr, np 12345678</small>#}
+{#        </div>#}
+{#        <button type="submit" class="btn btn-primary">Dodaj</button>#}
+{#    </form>#}
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {% for field in form %}
+                <div class="py-3">
+                    <label for="{{ field.name }}">{{ field.label }}:</label>
+                    <input type="text" class="form-control" id="{{ field.name }}" name="{{ field.name }}">
+                    {% for error in field.error %}
+                        <div class="alert alert-warning">
+                            <strong>{{ error }}</strong>
+                        </div>
+                    {% endfor %}
+    {#                {{ field.label }}{{ field }}#}
+                </div>
+            {% endfor %}
+            {% for error in form.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error }}</strong>
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Dodaj</button>
+        </div>
+    </form>
 {% endblock %}

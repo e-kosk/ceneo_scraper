@@ -3,7 +3,8 @@ from django.db import models
 
 class OpinionModel(models.Model):
 
-    product_id = models.CharField(max_length=10, unique=False, null=False, blank=False, verbose_name='Product ID')
+    # product_id = models.CharField(max_length=10, unique=False, null=False, blank=False, verbose_name='Product ID')
+    product = models.ForeignKey(to='ProductModel', on_delete=models.CASCADE, unique=False, null=False, blank=False, verbose_name='Product')
     opinion_id = models.CharField(max_length=10, unique=True, null=False, blank=False, verbose_name='Opinion ID')
     author = models.CharField(max_length=10, unique=False, null=False, blank=False, verbose_name='Author')
     recomendation = models.NullBooleanField(default=None, null=True, blank=True, verbose_name='User recomendation')
@@ -22,3 +23,10 @@ class OpinionModel(models.Model):
     def __repr__(self):
         return f'Opinion({self.product_id} {self.opinion_id}, {self.author}, {self.author}, {self.recomendation}, {self.stars}, {self.content}, {self.cons}, {self.pros}, {self.useful}, {self.useless}, {self.opinion_date}, {self.purchase_date}'
 
+
+class ProductModel(models.Model):
+
+    product_id = models.CharField(max_length=8, null=False, blank=False, verbose_name='Product ID')
+
+    def __str__(self):
+        return self.product_id
