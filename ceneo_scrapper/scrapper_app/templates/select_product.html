@@ -5,6 +5,26 @@ Select Product
 {% endblock %}
 
 {% block content %}
-    <h1 class="py-3">Wybierz produkt</h1><hr>
-    <p class="py-3">Nie ma produktu, którego szukasz? <a href="/products/add/"><button class="btn btn-success btn-sm">Dodaj go</button></a></p>
+    {% if info %}
+        <div class="alert alert-warning" role="alert">{{ info }}</div>
+    {% endif %}
+    <div class="pt-3 pb-0 mb-0">
+        <h1>Wybierz produkt</h1>
+        <p class="m-0 p-0">lub <a href="{% url 'add_product' %}"><span class="badge badge-success">dodaj nowy</span></a>.</p>
+    </div>
+    <hr class="">
+    {% if not products %}
+        {% if search %}
+            <p class="py-3">Brak wyników wyszukiwania: <span class="bold">{{ search }}</span>.</p>
+        {% else %}
+            <p class="py-3">Brak produktów do wyświetlenia.</p>
+        {% endif %}
+    {% else %}
+        <table class="table">
+            <thead class="thead-light"><th>id</th><th>nazwa</th></thead>
+            {% for product in products %}
+                <tr><td><a href="/products/{{ product.product_id }}">{{ product.product_id }}</a></td><td>{{ product.name }}</td></tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 {% endblock %}

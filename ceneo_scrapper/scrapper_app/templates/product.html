@@ -1,9 +1,50 @@
 {% extends 'main.html' %}
+{% load static %}
 
 {% block title %}
-Product {{ product_id }}
+    Product {{ product_id }}
+{% endblock %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'scrapper_app/css/datatables.css' %}">
+    <script src="https://kit.fontawesome.com/2ac8cb0b88.js" crossorigin="anonymous"></script>
+    <script src="{% static 'scrapper_app/js/datatables.js' %}"></script>
+    <script src="{% static 'scrapper_app/js/product.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-    <h1>Product info here i guess</h1>
+    {% if info %}
+        <div class="alert alert-warning" role="alert">{{ info }}</div>
+    {% endif %}
+    <div class="pt-3 pb-0 mb-0">
+        <h1>{{ product.name }} <sup>{{ avg_score }} / 5.0</sup></h1>
+{#        <p class="m-0 p-0">lub <a href="{% url 'add_product' %}"><span class="badge badge-success">dodaj nowy</span></a>.</p>#}
+        <p class="m-0 p-0">liczba opinii: <span class="badge badge-success">{{ opinions_amount }}</span></p>
+    </div>
+    <hr class="">
+    <p>
+        <button id="collapse-button" class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Analiza opinii <i id="collapse-button-arrow" class="fas fa-arrow-down"></i>
+        </button>
+    </p>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+            <p>Średnia ocena: <span class="bold">{{ avg_score }} / 5.0</span></p>
+            <p>Najwyższa ocena: <span class="bold">{{ max_score }} / 5.0</span></p>
+            <p>Najniższa ocena: <span class="bold">{{ min_score }} / 5.0</span></p>
+            <p>Najczęstsza ocena: <span class="bold">{{ most_frequent_score_value }}</span> (<span class="bold">{{ most_frequent_score_times }}</span> razy)</p>
+            <p>Na podstawie <span class="bold">{{ opinions_amount }}</span> opinii. <span class="bold">{{ purchase_confirmed }}</span> z nich potwierdzone zakupem.</p>
+        </div>
+    </div>
+    <hr class="">
+    {% if not product.opinionmodel_set.count %}
+        <p class="py-3">Brak opinii do wyświetlenia.</p>
+    {% else %}
+        <table id="table" class="table">
+            <thead class="thead-light"><th>id</th><th>autor</th><th>treść</th><th>ocena</th></thead>
+            {% for opinion in product.opinionmodel_set.all %}
+                <tr><td><a href="/opinions/{{ opinion.opinion_id }}">{{ opinion.opinion_id }}</a></td><td>{{ opinion.author }}</td><td>{{ opinion.content | truncatechars:100 }}</td><td>{{ opinion.stars }} / 5.0</td></tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 {% endblock %}

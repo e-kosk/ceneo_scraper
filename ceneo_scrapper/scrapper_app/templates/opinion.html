@@ -5,5 +5,16 @@ Opinion {{ opinion_id }}
 {% endblock %}
 
 {% block content %}
-    <h1>Opinion View</h1>
+    {% if info %}
+        <div class="alert alert-warning" role="alert">{{ info }}</div>
+    {% endif %}
+    <div class="pt-3 pb-0 mb-0">
+        <h1>Opinia do {{ opinion.product.name }}</h1>
+    </div>
+    <hr class="">
+    <table id="table" class="table">
+        {% for field, value in opinion_json.fields.items %}
+            <tr><td>{{ field }}</td><td>{{ value }}</td></tr>
+        {% endfor %}
+    </table>
 {% endblock %}

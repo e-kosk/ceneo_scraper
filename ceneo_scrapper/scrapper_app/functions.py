@@ -1,5 +1,3 @@
-import json
-
 
 def extract_feature(opinion, selector, attribute=None):
     try:
