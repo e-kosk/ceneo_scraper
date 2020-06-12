@@ -16,6 +16,8 @@ def analyze_product(product):
         'most_frequent_score_value': df['stars'].value_counts().keys()[0] if df['stars'].value_counts().max() > 0 else None,
         'opinions_amount': None or df['id'].count(),
         'purchase_confirmed': None or df['purchase_date'].count(),
+        'cons_amount': None or df['cons'].count(),
+        'pros_amount': None or df['pros'].count(),
     }
 
     return result
