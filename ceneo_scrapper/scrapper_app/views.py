@@ -1,10 +1,13 @@
 import json
+import os
 
+import markdown
 from django.core import serializers
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
+from django.conf import settings
 
 from scrapper_app.form import AddProductForm
 from scrapper_app.analyzer import analyze_product
@@ -15,13 +18,24 @@ from scrapper_app.scraper import get_opinions, get_product
 class HomeView(View):
 
     def get(self, request):
-        return render(request, 'home.html')
+        with open(os.path.join(settings.BASE_DIR, 'requirements.txt')) as file:
+            context = {
+                'dependencies': [req[:-2] for req in file.readlines()]
+            }
+
+        return render(request, 'home.html', context=context)
 
 
 class AboutView(View):
 
     def get(self, request):
-        return render(request, 'about.html')
+        with open(os.path.join(os.path.dirname(settings.BASE_DIR), 'README.md')) as file:
+            md = markdown.Markdown()
+            context = {
+                'md': md.convert(file.read())
+            }
+
+        return render(request, 'about.html', context=context)
 
 
 class SelectProductView(View):
@@ -54,10 +68,11 @@ class AddProductView(View):
         form = AddProductForm(request.POST)
 
         if form.is_valid():
-            product = get_product(form.cleaned_data.get('product_id'))
+            product_id = form.cleaned_data.get('product_id')
+            product = get_product(product_id)
             if product:  # product exists in Ceneo system
                 get_opinions(product)
-                return HttpResponseRedirect(reverse('products'))
+                return redirect(reverse('product', kwargs={'product_id': product_id}))
             else:  # product with this id doesn't exist
                 form.add_error('product_id', 'Produkt o podanym ID nie istnieje.')
 

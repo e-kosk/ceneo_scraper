@@ -5,5 +5,32 @@ Ceneo Scrapper
 {% endblock %}
 
 {% block content %}
-    <h1>Home View</h1>
+    <h1>Ceneo Scrapper</h1>
+    <p>
+        Aplikacja pozwala na analizowanie opinii wystawionych w serwisie <a href="https://www.ceneo.pl" target="_blank">Ceneo.pl</a>.
+    </p>
+
+    <hr>
+
+    <h1>Jak korzystać</h1>
+    <p>
+        Aby zobaczyć statystykę opinii danego produktu, udaj się na stronę <a href="https://www.ceneo.pl" target="_blank">Ceneo.pl</a>
+        oraz wyszukaj interesujący Cię produkt. Następnie skopiuj jego ID - będzie potrzebne do pozyskania danych.
+        ID produktu można znależć np. w pasku adresu: www.ceneo.pl/&lt;ID_PRODUKTU&gt;. Następnie wejdż w zakładkę
+        <mark>produkty &gt; dodaj</mark> oraz wpisz ID produktu. Kliknij przycisk <mark>Dodaj</mark> i poczekaj
+        na odpowiedź serwera. Jeśli wpisane zostało złe ID produktu - zostaniesz o tym poinformowany; jeśli dobre -
+        zostaniesz przekierowany na stronę ze swoim produktem.
+    </p>
+
+    <hr>
+
+    <h1>Techniczne aspekty</h1>
+    <p>
+        Aplikacja została stworzona na frameworku Django wraz z biblioteką Bootstrap4 oraz licznymi dodatkami:
+        <ul class="list-group">
+            {% for dependecy in dependencies %}
+                <li class="list-group-item">{{ dependecy }}</li>
+            {% endfor %}
+        </ul>
+    </p>
 {% endblock %}
