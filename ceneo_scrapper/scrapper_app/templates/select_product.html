@@ -23,7 +23,7 @@ Select Product
         <table class="table">
             <thead class="thead-light"><th>id</th><th>nazwa</th></thead>
             {% for product in products %}
-                <tr><td><a href="/products/{{ product.product_id }}">{{ product.product_id }}</a></td><td>{{ product.name }}</td></tr>
+                <tr><td><a href="/products/{{ product.product_id }}">{{ product.product_id }}</a></td><td><a href="https://www.ceneo.pl/{{ product.product_id }}">{{ product.name }}</a></td></tr>
             {% endfor %}
         </table>
     {% endif %}

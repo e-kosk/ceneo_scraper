@@ -1,4 +1,10 @@
+import os
+
+import numpy as np
+from django.conf import settings
+
 from django_pandas.io import read_frame
+from matplotlib import pyplot as plt
 
 from scrapper_app.models import OpinionModel
 
@@ -21,3 +27,34 @@ def analyze_product(product):
     }
 
     return result
+
+
+def get_charts(product):
+
+    qs = OpinionModel.objects.filter(product=product)
+    df = read_frame(qs)
+
+    # stars chart
+    stars = df.stars.value_counts().sort_index().reindex(list(np.arange(0, 5.5, 0.5)), fill_value=0)
+    fig, ax = plt.subplots()
+    stars.plot.bar(color="#E0DF0A")
+    plt.title("Ocena")
+    plt.xlabel("Liczba gwiazdek")
+    plt.ylabel("Liczba opinii")
+    plt.xticks(rotation=0)
+    str_path = os.path.join('scrapper_app', 'img', f'{product.product_id}_stars.png')
+    plt.savefig(os.path.join(settings.MEDIA_ROOT, str_path))
+    plt.close()
+    product.str_chart = os.path.join(settings.MEDIA_URL, str_path)
+
+    # recommendation chart
+    recommendation = df.recommendation.value_counts()
+    fig, ax = plt.subplots()
+    recommendation.plot.pie(label="", autopct="%1.1f%%", colors=['#04E03C', '#E0320F'])
+    plt.title("Rekomendacja")
+    rec_path = os.path.join('scrapper_app', 'img', f'{product.product_id}_recommendation.png')
+    plt.savefig(os.path.join(settings.MEDIA_ROOT, rec_path))
+    plt.close()
+    product.rec_chart = os.path.join(settings.MEDIA_URL, rec_path)
+
+    product.save()

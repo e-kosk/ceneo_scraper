@@ -7,6 +7,7 @@
 
 {% block extrastyle %}
     <link rel="stylesheet" href="{% static 'scrapper_app/css/datatables.css' %}">
+    <link rel="stylesheet" href="{% static 'scrapper_app/css/product.css' %}">
     <script src="https://kit.fontawesome.com/2ac8cb0b88.js" crossorigin="anonymous"></script>
     <script src="{% static 'scrapper_app/js/datatables.js' %}"></script>
     <script src="{% static 'scrapper_app/js/product.js' %}"></script>
@@ -18,7 +19,6 @@
     {% endif %}
     <div class="pt-3 pb-0 mb-0">
         <h1>{{ product.name }} <sup>{{ avg_score }} / 5.0</sup></h1>
-{#        <p class="m-0 p-0">lub <a href="{% url 'add_product' %}"><span class="badge badge-success">dodaj nowy</span></a>.</p>#}
         <p class="m-0 p-0">liczba opinii: <span class="badge badge-success">{{ opinions_amount }}</span></p>
     </div>
     <hr class="">
@@ -26,6 +26,9 @@
         <button id="collapse-button" class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
             Analiza opinii <i id="collapse-button-arrow" class="fas fa-arrow-down"></i>
         </button>
+        <a href="download/" target="_blank"><button id="download-button" class="btn btn-info" type="button">
+            Pobierz plik JSON <i class="fas fa-file-export"></i>
+        </button></a>
     </p>
     <div class="collapse" id="collapseExample">
         <div class="card card-body">
@@ -36,6 +39,22 @@
             <p>Oceny z zaletami: <span class="bold">{{ pros_amount }} / {{ opinions_amount }}</span></p>
             <p>Oceny z wadami: <span class="bold">{{ cons_amount }} / {{ opinions_amount }}</span></p>
             <p>Na podstawie <span class="bold">{{ opinions_amount }}</span> opinii. <span class="bold">{{ purchase_confirmed }}</span> z nich potwierdzone zakupem.</p>
+            <div class="row charts">
+                <div class="col-12 col-sm-6">
+                    {% if product.rec_chart %}
+                        <a href="{{ product.rec_chart }}" target="_blank"><img src="{{ product.rec_chart }}" alt="wykres rekomendacji"></a>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">Błąd ładowania wykresu rekomendacji. Spróbuj ponownie później.</div>
+                    {% endif %}
+                </div>
+                <div class="col-12 col-sm-6">
+                    {% if product.str_chart %}
+                        <a href="{{ product.str_chart }}" target="_blank"><img src="{{ product.str_chart }}" alt="wykres ocen"></a>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">Błąd ładowania wykresu ocen. Spróbuj ponownie później.</div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
     <hr class="">

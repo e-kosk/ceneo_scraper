@@ -27,6 +27,8 @@ class ProductModel(models.Model):
 
     product_id = models.CharField(max_length=8, unique=True, null=False, blank=False, verbose_name='Product ID')
     name = models.CharField(max_length=256, null=False, blank=False, verbose_name='Name')
+    rec_chart = models.CharField(max_length=128, null=True, blank=True, verbose_name='Recommendation chart')
+    str_chart = models.CharField(max_length=128, null=True, blank=True, verbose_name='Stars chart')
 
     def __str__(self):
         return f'{self.name[:50]} [{self.product_id}]'

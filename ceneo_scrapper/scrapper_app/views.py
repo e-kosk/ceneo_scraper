@@ -1,16 +1,16 @@
 import json
 import os
-
 import markdown
+
 from django.core import serializers
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from django.conf import settings
 
 from scrapper_app.form import AddProductForm
-from scrapper_app.analyzer import analyze_product
+from scrapper_app.analyzer import analyze_product, get_charts
 from scrapper_app.models import ProductModel, OpinionModel
 from scrapper_app.scraper import get_opinions, get_product
 
@@ -72,6 +72,7 @@ class AddProductView(View):
             product = get_product(product_id)
             if product:  # product exists in Ceneo system
                 get_opinions(product)
+                get_charts(product)
                 return redirect(reverse('product', kwargs={'product_id': product_id}))
             else:  # product with this id doesn't exist
                 form.add_error('product_id', 'Produkt o podanym ID nie istnieje.')
@@ -96,6 +97,20 @@ class ProductView(View):
         context.update(analysis)
 
         return render(request, 'product.html', context=context)
+
+
+class DownloadView(View):
+
+    def get(self, request, product_id):
+        product = get_object_or_404(ProductModel, product_id=product_id)
+        opinions = OpinionModel.objects.filter(product=product)
+
+        data = serializers.serialize('json', opinions)
+
+        response = HttpResponse(json.dumps(json.loads(data), indent=4, ensure_ascii=False), content_type='application/json')
+        response['Content-Disposition'] = f'attachment; filename="opinions-{product_id}.json"'
+
+        return response
 
 
 class SelectOpinionView(View):
